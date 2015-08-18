@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Theme-->
+    <color name="red">#FF6347</color>
+    <color name="dark_red">#F4511E</color>
+    <color name="accent_red">#FF5722</color>
+    <color name="pink">#ff5d65</color>
+</resources>

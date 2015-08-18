@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accelerateInterpolator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:factor="2.0" />
+<!-- From: file:/D:/android_projects/android_projects/CardGallery/TuSDK/res/anim/lsq_accelerate_interpolator.xml -->

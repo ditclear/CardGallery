@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CardGallery</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="addImg">选择图片</string>
+    <string name="capImg">拍照</string>
+    <string name="simple_EditMultipleComponent">多功能图片编辑组件</string>
+    <string name="simple_CameraAndEditCutComponent">相机连接图片编辑组件</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <solid android:color="@color/lsq_seekbar_drag_color" />
+
+    <stroke
+        android:width="2dp"
+        android:color="@color/lsq_seekbar_view_color" />
+    
+    <corners android:radius="10dp" />
+
+</shape><!-- From: file:/D:/android_projects/android_projects/CardGallery/TuSDK/res/drawable/tusdk_view_widget_seekbar_drag.xml --><!-- From: file:/D:/android_projects/android_projects/CardGallery/TuSDK/build/intermediates/bundles/debug/res/drawable/tusdk_view_widget_seekbar_drag.xml -->

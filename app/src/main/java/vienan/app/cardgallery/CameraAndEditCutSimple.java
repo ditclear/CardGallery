@@ -31,6 +31,9 @@ import org.lasque.tusdk.impl.components.edit.TuEditTurnAndCutOption;
 public class CameraAndEditCutSimple extends SimpleBase implements
         TuCameraFragmentDelegate
 {
+
+
+    TuEditTurnAndCutFragment.TuEditTurnAndCutFragmentDelegate mDelegate;
     /**
      * 相机连接图片编辑组件范例
      */
@@ -82,7 +85,7 @@ public class CameraAndEditCutSimple extends SimpleBase implements
         // option.setDefaultFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 
         // 是否开启滤镜支持 (默认: 关闭)
-        // option.setEnableFilters(true);
+         option.setEnableFilters(true);
 
         // 默认是否显示滤镜视图 (默认: 不显示, 如果mEnableFilters = false, mShowFilterDefault将失效)
         // option.setShowFilterDefault(true);
@@ -104,7 +107,7 @@ public class CameraAndEditCutSimple extends SimpleBase implements
         // option.setFilterTableCellLayoutId(GroupFilterItemView.getLayoutId());
 
         // 开启滤镜配置选项
-        // option.setEnableFilterConfig(true);
+        option.setEnableFilterConfig(true);
 
         // 需要显示的滤镜名称列表 (如果为空将显示所有自定义滤镜)
         // 滤镜名称参考 TuSDK.bundle/others/lsq_tusdk_configs.json
@@ -263,48 +266,5 @@ public class CameraAndEditCutSimple extends SimpleBase implements
         }
     }
 
-    TuEditTurnAndCutFragment.TuEditTurnAndCutFragmentDelegate mDelegate =
-                new TuEditTurnAndCutFragment.TuEditTurnAndCutFragmentDelegate()
-    {
-        /**
-         * 图片编辑完成
-         *
-         * @param fragment 旋转和裁剪视图控制器
-         * @param result   旋转和裁剪视图控制器处理结果
-         */
-        @Override
-        public void onTuEditTurnAndCutFragmentEdited(
-                TuEditTurnAndCutFragment fragment, TuSdkResult result)
-        {
 
-            if (!fragment.isShowResultPreview())
-            {
-                fragment.hubDismissRightNow();
-                fragment.dismissActivityWithAnim();
-            }
-            TLog.d("onTuEditTurnAndCutFragmentEdited: %s", result);
-        }
-
-        /**
-         * 图片编辑完成 (异步方法)
-         *
-         * @param fragment 旋转和裁剪视图控制器
-         * @param result   旋转和裁剪视图控制器处理结果
-         * @return 是否截断默认处理逻辑 (默认: false, 设置为True时使用自定义处理逻辑)
-         */
-        @Override
-        public boolean onTuEditTurnAndCutFragmentEditedAsync(
-                TuEditTurnAndCutFragment fragment, TuSdkResult result)
-        {
-            return false;
-        }
-
-        @Override
-        public void onComponentError(TuFragment fragment, TuSdkResult result,
-                                     Error error)
-        {
-            TLog.d("onComponentError: fragment - %s, result - %s, error - %s",
-                    fragment, result, error);
-        }
-    };
 }

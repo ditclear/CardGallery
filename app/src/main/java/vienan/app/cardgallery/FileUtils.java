@@ -9,5 +9,5 @@ import java.io.File;
  */
 public class FileUtils {
     public final static String path= Environment.getExternalStorageDirectory().getAbsolutePath()
-            + File.separator+"CardGallery";
+            + File.separator+"DCIM/Camera";
 }

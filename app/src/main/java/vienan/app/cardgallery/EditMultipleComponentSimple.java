@@ -15,7 +15,6 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkResult;
 import org.lasque.tusdk.impl.activity.TuFragment;
 import org.lasque.tusdk.impl.components.TuEditMultipleComponent;
-import org.lasque.tusdk.impl.components.TuEditMultipleComponentOption;
 import org.lasque.tusdk.impl.components.base.TuSdkComponent.TuSdkComponentDelegate;
 import org.lasque.tusdk.impl.components.base.TuSdkHelperComponent;
 
@@ -115,10 +114,6 @@ public class EditMultipleComponentSimple extends SimpleBase
 		// component.componentOption().editVignetteOption()
 
 
-		TuEditMultipleComponentOption componentOption=new TuEditMultipleComponentOption();
-		componentOption.editMultipleOption().setSaveToAlbum(false);
-		componentOption.editMultipleOption().setAutoRemoveTemp(true);
-		component.setComponentOption(componentOption);
 		// 设置图片
 
 		component.setImage(result.image)

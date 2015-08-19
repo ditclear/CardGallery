@@ -1,39 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-    <ImageView
-        android:id="@+id/iv_img"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_marginTop="80dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:src="@mipmap/ic_launcher"
-        />
-    <LinearLayout
-        android:id="@+id/layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
-    <Button
-        android:id="@+id/bt_addImg"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
+        android:dividerHeight="@dimen/abc_dialog_list_padding_vertical_material"/>
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_shape"
-        android:textColor="@color/lsq_color_white"
-        android:text="@string/addImg"/>
-    <Button
-        android:id="@+id/bt_capImg"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:background="@drawable/btn_shape"
-        android:textColor="@color/lsq_color_white"
-        android:text="@string/capImg"/>
-    </LinearLayout>
-</RelativeLayout>
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@mipmap/actionbar_add_icon"
+        fab:fab_colorNormal="@color/pink"
+        fab:fab_colorPressed="@color/primary_pressed"
+        fab:fab_colorRipple="@color/ripple" />
+</FrameLayout>

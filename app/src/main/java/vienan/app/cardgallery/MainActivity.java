@@ -10,13 +10,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.melnykov.fab.FloatingActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.twotoasters.jazzylistview.JazzyHelper;
+import com.twotoasters.jazzylistview.JazzyListView;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
@@ -39,10 +40,9 @@ import butterknife.OnClick;
 
 
 public class MainActivity extends Activity {
-    @Bind(android.R.id.list)
-    ListView list;
     @Bind(R.id.fab)
     FloatingActionButton fab;
+    JazzyListView list;
     AlertView alertView;
     ListAdapter adapter;
     List<String> uris=new ArrayList<String>();
@@ -100,6 +100,7 @@ public class MainActivity extends Activity {
         Log.i("image2", result.toString());
         Log.d("img2", result.imageSqlInfo.path);
         uris.add(result.imageSqlInfo.path);
+
         adapter.notifyDataSetChanged();
         list.invalidate();
         list.setSelection(uris.size());
@@ -109,13 +110,19 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*FadingActionBarHelper helper = new FadingActionBarHelper()
+                .actionBarBackground(R.color.pink)
+                .headerLayout(R.layout.header)
+                .contentLayout(R.layout.activity_main);
+        setContentView(helper.createView(this));
+        helper.initActionBar(this);*/
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
         }
-
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
+        tintManager.setNavigationBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.color.pink);
         ButterKnife.bind(this);
         initView();
@@ -170,7 +177,7 @@ public class MainActivity extends Activity {
         // 需要等待滤镜管理器初始化完成，才能使用所有功能
         TuProgressHub.setStatus(this, TuSdkContext.getString("lsq_initing"));
         TuSdk.checkFilterManager(mFilterManagerDelegate);
-
+        list= (JazzyListView) findViewById(R.id.list);
         File file=new File(FileUtils.path);
         if(file.isDirectory()) {
             File[] files = file.listFiles();
@@ -183,6 +190,8 @@ public class MainActivity extends Activity {
         }
         adapter=new ListAdapter(this, uris);
         list.setAdapter(adapter);
+        list.setTransitionEffect(JazzyHelper.WAVE);
+        list.setOnScrollListener(null);
         fab.attachToListView(list);
     }
 

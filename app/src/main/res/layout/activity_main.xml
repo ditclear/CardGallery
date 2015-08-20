@@ -1,14 +1,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_marginTop="80dp"
+    android:layout_height="match_parent"
+    tools:contex=".MainActivity">
+    <com.twotoasters.jazzylistview.JazzyListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="@dimen/abc_dialog_list_padding_vertical_material"/>
+        android:padding="5dp"
+        android:dividerHeight="5dp"
+        b
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false"/>
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

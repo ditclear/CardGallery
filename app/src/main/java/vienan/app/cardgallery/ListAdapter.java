@@ -53,7 +53,7 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder=new ViewHolder();
         if (convertView==null){
-            convertView= LayoutInflater.from(context).inflate(R.layout.card,null);
+            convertView= LayoutInflater.from(context).inflate(R.layout.card_basic_img,null);
             viewHolder.imageView= (ImageView) convertView.findViewById(R.id.imageView);
             viewHolder.title= (TextView) convertView.findViewById(R.id.titleTextView);
             viewHolder.description= (TextView) convertView.findViewById(R.id.descriptionTextView);

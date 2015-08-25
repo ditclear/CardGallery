@@ -1,12 +1,18 @@
 package vienan.app.cardgallery;
 
-import org.lasque.tusdk.core.TuSdkApplication;
+import android.graphics.Typeface;
+
+import com.activeandroid.ActiveAndroid;
+
+import org.lasque.tusdk.core.TuSdk;
 
 /**
  * Created by vienan on 2015/8/17.
  */
-public class MyApplication extends TuSdkApplication
+public class MyApplication extends com.activeandroid.app.Application
 {
+    private static final String CANARO_EXTRA_BOLD_PATH = "fonts/canaro_extra_bold.otf";
+    public static Typeface canaroExtraBold;
     /**
      * 应用程序创建
      */
@@ -25,11 +31,11 @@ public class MyApplication extends TuSdkApplication
          *
          * 开发文档:http://tusdk.com/docs/android/api/
          */
-
+        ActiveAndroid.initialize(this);
         // 设置输出状态
-        this.setEnableLog(true);
+        TuSdk.enableDebugLog(true);
         // 初始化SDK (请前往 http://tusdk.com 获取您的APP 开发秘钥)
-        this.initPreLoader(this.getApplicationContext(),
+        TuSdk.init(this.getApplicationContext(),
                 "6bfaef371af71479-00-shlwn1");
 
         // 如果不想继承TuApplication，直接在自定义Application.onCreate()方法中调用以下方法
@@ -38,5 +44,10 @@ public class MyApplication extends TuSdkApplication
         // 开发ID (请前往 http://tusdk.com 获取您的APP 开发秘钥)
         // TuSdk.init(this.getApplicationContext(),
         // "12aa4847a3a9ce68-04-ewdjn1");
+        initTypeface();
+    }
+    private void initTypeface() {
+        canaroExtraBold = Typeface.createFromAsset(getAssets(), CANARO_EXTRA_BOLD_PATH);
+
     }
 }

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.0 rc3"
     defaultConfig {
         applicationId "vienan.app.cardgallery"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -18,7 +18,18 @@ android {
     }
 
 }
-
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/"
+                'http://dl.bintray.com/amulyakhare/maven'
+                "https://jitpack.io"
+                }
+}
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':TuSDK')
@@ -29,5 +40,10 @@ dependencies {
     compile 'com.bigkoo:alertview:1.0.0'
     compile 'com.twotoasters.jazzylistview:library:1.2.1'
     compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
-    compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile 'net.frakbot:jumpingbeans:1.2.0'
+    compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
+    compile project(':GuillotineMenu')
+    compile 'com.alexvasilkov:foldable-layout:1.0.1'
 }

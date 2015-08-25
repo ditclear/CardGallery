@@ -10,4 +10,7 @@
     <color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
     <color name="primary_pressed">#C2185B</color>
+    <color name="guillotine_background">#444153</color>
+    <color name="guillotine_background_dark">#383547</color>
+    <color name="selected_item_color">#30d1d5</color>
 </resources>

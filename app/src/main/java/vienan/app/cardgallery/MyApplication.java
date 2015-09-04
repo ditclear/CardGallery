@@ -36,7 +36,7 @@ public class MyApplication extends com.activeandroid.app.Application
         TuSdk.enableDebugLog(true);
         // 初始化SDK (请前往 http://tusdk.com 获取您的APP 开发秘钥)
         TuSdk.init(this.getApplicationContext(),
-                "6bfaef371af71479-00-shlwn1");
+                "980a1c30dff7827d-00-shlwn1");
 
         // 如果不想继承TuApplication，直接在自定义Application.onCreate()方法中调用以下方法
         // 初始化全局变量

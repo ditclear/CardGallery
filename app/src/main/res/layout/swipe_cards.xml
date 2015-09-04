@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/guillotine_actionbar_background_view_height"
+        android:layout_gravity="top"
+        android:background="@color/pink" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            app:contentInsetStart="0dp">
+            <ImageView
+                android:id="@+id/back_to_main"
+                style="@style/ImageView.Hamburger"
+                android:src="@mipmap/ic_arrow_back_white_24dp" />
+            <vienan.app.cardgallery.view.CanaroTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/scan_card"
+                android:textColor="@color/lsq_color_white"
+                android:textSize="@dimen/guillotine_item_text_size" />
+
+        </android.support.v7.widget.Toolbar>
+
+        <com.andtinder.view.CardContainer
+            android:id="@+id/layout_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            app:orientation="ordered"/>
+    </LinearLayout>
+</FrameLayout>

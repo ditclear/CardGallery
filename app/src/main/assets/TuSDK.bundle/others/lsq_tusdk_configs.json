@@ -102,7 +102,7 @@
                     "args": {
                         "mixied": 0.8
                     }
-                 },
+                },
                 { "id": 52, "name": "lsq_filter_Coloration" },
                 { "id": 53, "name": "lsq_filter_Fluorescent" },
                 { "id": 54, "name": "lsq_filter_Freshmorning" },
@@ -112,39 +112,240 @@
             ]
         }
     ],
-    "stickerCategories": [
-        { "id": 1, "name": "lsq_sticker_cate_default" },
-        { "id": 2, "name": "lsq_sticker_cate_mood" },
-        { "id": 3, "name": "lsq_sticker_cate_watermark" }
-    ],
-    "stickerGroups": [
+    "stickerCategories":[
         {
-            "file": "lsq_sticker_1_257.gsce",
-            "valid_key": "2935bc45d866c391",
-            "name": "lsq_sticker_1_1",
-            "stickers": [
-                { "id": 1613 },
-                { "id": 1614 },
-                { "id": 1615 },
-                { "id": 1616 },
-                { "id": 1617 },
-                { "id": 1618 },
-                { "id": 1619 },
+            "id":1,
+            "name":"\u8d34\u7eb8"
+        },
+        {
+            "id":2,
+            "name":"\u5fc3\u60c5"
+        },
+        {
+            "id":3,
+            "name":"\u6c34\u5370"
+        }
+    ],
+    "stickerGroups":[
+        {
+            "file":"lsq_sticker_3_443.gsce",
+            "valid_key":"26665579b5f8c836",
+            "name":"\u5f00\u5b66\u5566",
+            "stickers":[
                 {
-                    "id": 1620,
-                    "width": 100,
-                    "height": 100,
-                    "texts": [
-                        {
-                            "id": 201,
-                            "content": "lsq_sticker_text_1_1_1_1",
-                            "color": "#FFFFFF"
-                        }
-                    ]
+                    "id":2915
+                },
+                {
+                    "id":2916
+                },
+                {
+                    "id":2917
+                },
+                {
+                    "id":2918
+                },
+                {
+                    "id":2919
+                },
+                {
+                    "id":2920
+                },
+                {
+                    "id":2921
+                },
+                {
+                    "id":2922
                 }
             ]
         },
-        { "file": "lsq_sticker_2_249.gsce", "valid_key": "69b180a2c62b8686" },
-        { "file": "lsq_sticker_3_250.gsce", "valid_key": "0a39c15b64255477" }
+        {
+            "file":"lsq_sticker_1_441.gsce",
+            "valid_key":"e74e111b643eee35",
+            "name":"\u4e2a\u6027\u9886\u7ed3",
+            "stickers":[
+                {
+                    "id":2898
+                },
+                {
+                    "id":2899
+                },
+                {
+                    "id":2901
+                },
+                {
+                    "id":2902
+                },
+                {
+                    "id":2903
+                },
+                {
+                    "id":2904
+                },
+                {
+                    "id":2905
+                },
+                {
+                    "id":2906
+                }
+            ]
+        },
+        {
+            "file":"lsq_sticker_3_433.gsce",
+            "valid_key":"3d03584543a71fbf",
+            "name":"\u604b\u604b\u4e03\u5915",
+            "stickers":[
+                {
+                    "id":2850
+                },
+                {
+                    "id":2851
+                },
+                {
+                    "id":2852
+                },
+                {
+                    "id":2853
+                },
+                {
+                    "id":2854
+                },
+                {
+                    "id":2855
+                },
+                {
+                    "id":2856
+                },
+                {
+                    "id":2857
+                }
+            ]
+        },
+        {
+            "file":"lsq_sticker_1_426.gsce",
+            "valid_key":"e0f72a3e395e55c3",
+            "name":"\u53ef\u7231\u80cc\u666f",
+            "stickers":[
+                {
+                    "id":2794
+                },
+                {
+                    "id":2795
+                },
+                {
+                    "id":2796
+                },
+                {
+                    "id":2797
+                },
+                {
+                    "id":2798
+                },
+                {
+                    "id":2799
+                },
+                {
+                    "id":2800
+                },
+                {
+                    "id":2801
+                }
+            ]
+        },
+        {
+            "file":"lsq_sticker_1_405.gsce",
+            "valid_key":"abc8526dcc0afbc9",
+            "name":"\u7231\u97f3\u4e50",
+            "stickers":[
+                {
+                    "id":2566
+                },
+                {
+                    "id":2567
+                },
+                {
+                    "id":2568
+                },
+                {
+                    "id":2569
+                },
+                {
+                    "id":2570
+                },
+                {
+                    "id":2571
+                },
+                {
+                    "id":2572
+                },
+                {
+                    "id":2573
+                }
+            ]
+        },
+        {
+            "file":"lsq_sticker_2_62.gsce",
+            "valid_key":"49957c91326e10fd",
+            "name":"\u840c\u840c\u54d2\u8868\u60c5\u5305",
+            "stickers":[
+                {
+                    "id":447
+                },
+                {
+                    "id":448
+                },
+                {
+                    "id":449
+                },
+                {
+                    "id":450
+                },
+                {
+                    "id":451
+                },
+                {
+                    "id":452
+                },
+                {
+                    "id":453
+                },
+                {
+                    "id":454
+                },
+                {
+                    "id":455
+                },
+                {
+                    "id":456
+                },
+                {
+                    "id":457
+                },
+                {
+                    "id":458
+                }
+            ]
+        },
+        {
+            "file":"lsq_sticker_2_10.gsce",
+            "valid_key":"de2f0c7b3be17cb3",
+            "name":"\u5047\u9762",
+            "stickers":[
+                {
+                    "id":51
+                },
+                {
+                    "id":52
+                },
+                {
+                    "id":53
+                },
+                {
+                    "id":54
+                },
+                {
+                    "id":55
+                }
+            ]
+        }
     ]
 }

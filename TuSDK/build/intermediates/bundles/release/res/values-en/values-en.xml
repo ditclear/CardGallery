@@ -21,9 +21,9 @@
     <string name="lsq_button_close">Close</string>
     <string name="lsq_button_done">OK</string>
     <string name="lsq_button_flash">Flash:</string>
-    <string name="lsq_button_flash_model_auto">On</string>
+    <string name="lsq_button_flash_model_auto">Auto</string>
     <string name="lsq_button_flash_model_off">Off</string>
-    <string name="lsq_button_flash_model_open">Auto</string>
+    <string name="lsq_button_flash_model_open">On</string>
     <string name="lsq_button_switch_camera">Switch</string>
     <string name="lsq_carema_alert_title">Can’t access camera</string>
     <string name="lsq_carema_image_process">Processing…</string>

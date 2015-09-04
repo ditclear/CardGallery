@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     >
 
-    <vienan.app.cardgallery.WheelView
+    <vienan.app.cardgallery.view.WheelView
         android:id="@+id/wheel_view_wv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

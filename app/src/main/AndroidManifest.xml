@@ -22,29 +22,30 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
     <application
-        tools:replace="android:label,android:theme"
+        tools:replace="android:label,android:theme,android:icon,android:name"
         android:name="vienan.app.cardgallery.MyApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_menu_white_48dp"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data android:name="AA_DB_NAME" android:value="card.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+        <meta-data android:name="AA_DB_VERSION" android:value="2" />
         <meta-data
             android:name="AA_MODELS"
             android:value="vienan.app.cardgallery.CardModel" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.TimeLineActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditCardActivity"
-            android:label="写点什么"/>
+        <activity android:name=".activity.MainActivity"/>
+        <activity android:name=".activity.EditCardActivity" />
+        <activity android:name=".activity.SwipeAbleCardsActivity" />
         <!-- *******************公共分组控制器******************* -->
         <activity
             android:name="org.lasque.tusdk.impl.activity.TuFragmentActivity"

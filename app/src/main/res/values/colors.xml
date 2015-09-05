@@ -17,4 +17,6 @@
     <color name="gray">#FF929292</color>
     <color name="head_line_bg">#cccccc</color>
     <color name="time_line_bg">#b3b3b3</color>
+    <color name="type_edit">#7075D9</color>
+    <color name="type_card">#F2C641</color>
 </resources>

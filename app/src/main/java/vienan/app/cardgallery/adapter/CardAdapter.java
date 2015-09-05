@@ -1,6 +1,7 @@
 package vienan.app.cardgallery.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,15 @@ import android.widget.TextView;
 
 import com.alexvasilkov.android.commons.adapters.ItemsAdapter;
 import com.alexvasilkov.android.commons.utils.Views;
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
 
-import vienan.app.cardgallery.model.CardModel;
 import vienan.app.cardgallery.R;
 import vienan.app.cardgallery.activity.MainActivity;
+import vienan.app.cardgallery.model.CardModel;
 
 /**
  * Created by vienan on 2015/8/25.
@@ -38,13 +40,20 @@ public class CardAdapter extends ItemsAdapter<CardModel> implements View.OnClick
 
         return view;
     }
-
+    TextDrawable drawable;
     @Override
     protected void bindView(CardModel item, int pos, View convertView) {
         ViewHolder vh = (ViewHolder) convertView.getTag();
-
         vh.image.setTag(item);
-        Picasso.with(convertView.getContext()).load(new File(item.imgPath)).noFade().into(vh.image);
+        if (item.imgPath!=null){
+            Picasso.with(convertView.getContext()).load(new File(item.imgPath)).noFade().into(vh.image);
+        }else {
+            if (drawable==null) {
+                drawable = TextDrawable.builder()
+                        .buildRect("NOTE", Color.BLUE);
+            }
+                vh.image.setImageDrawable(drawable);
+        }
         vh.title.setText(item.title);
     }
 

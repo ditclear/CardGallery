@@ -24,6 +24,8 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import java.util.Calendar;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -84,27 +86,6 @@ public class EditCardActivity extends Activity {
         }
     }
 
-    @OnClick(R.id.titleTextView)
-    public void onTitleClicked() {
-        /*final TuSdkEditText et = new TuSdkEditText(this);
-        new AlertDialog.Builder(this).setTitle("标题")
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setView(et)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String input = et.getText().toString();
-                        if (input.equals("")) {
-                            et.setShakeAnimation();
-                            input = "TITLE";
-                        }
-                        titleTextView.setText(input);
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .show();*/
-
-    }
-
     @OnClick(R.id.descriptionTextView)
     public void description() {
         final TextInputLayout textInputLayout = (TextInputLayout) getLayoutInflater().inflate(R.layout.edit_dialog, null);
@@ -151,13 +132,16 @@ public class EditCardActivity extends Activity {
             ,this);
             return;
         }
+        if (date==null){
+            Calendar calendar=Calendar.getInstance();
+            date= calendar.get(Calendar.MONTH)+1+"月"+calendar.get(Calendar.DAY_OF_MONTH)+"日";
+        }
         model.date=date;
         if (imgPath!=null){
             model.type="cardNote";
         }else {
             model.type="note";
         }
-
         model.title = title;
         model.description = description;
         Log.i("mode",model.toString());

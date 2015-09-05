@@ -5,9 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
+
 import vienan.app.cardgallery.R;
 import vienan.app.cardgallery.model.ChildStatusEntity;
 import vienan.app.cardgallery.model.GroupStatusEntity;
@@ -15,7 +19,7 @@ import vienan.app.cardgallery.model.GroupStatusEntity;
 public class StatusExpandAdapter extends BaseExpandableListAdapter {
 	private LayoutInflater inflater = null;
 	private List<GroupStatusEntity> groupList;
-
+	private Context context;
 
 	public List<GroupStatusEntity> getGroupList() {
 		return groupList;
@@ -30,6 +34,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
 	public StatusExpandAdapter(Context context,
 			List<GroupStatusEntity> group_list) {
 		this.groupList = group_list;
+		this.context=context;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -118,8 +123,16 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
 		} else {
 			viewHolder = new ChildViewHolder();
 			convertView = inflater.inflate(R.layout.child_status_item, null);
+			viewHolder.card_type= (ImageView) convertView.findViewById(R.id.iv_type);
 			viewHolder.twoStatusTime = (TextView) convertView
 					.findViewById(R.id.two_complete_time);
+		}
+		if (((ChildStatusEntity) getChild(groupPosition,childPosition)).getCard_type().equals("cardNote")){
+			Picasso.with(context).load(R.mipmap.ic_image_white_24dp).into(viewHolder.card_type);
+			viewHolder.card_type.setBackgroundResource(R.drawable.circle_type);
+		}else {
+			Picasso.with(context).load(R.mipmap.ic_mode_edit_white_24dp).into(viewHolder.card_type);
+			viewHolder.card_type.setBackgroundResource(R.drawable.type_edit);
 		}
 		viewHolder.twoStatusTime.setText(entity.getCompleteTime());
 
@@ -138,6 +151,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
 	}
 
 	private class ChildViewHolder {
+		public ImageView card_type;
 		public TextView twoStatusTime;
 	}
 

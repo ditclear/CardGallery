@@ -4,12 +4,14 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,19 +25,22 @@ import com.activeandroid.query.Select;
 import com.alexvasilkov.android.commons.utils.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.picasso.Picasso;
 import com.twotoasters.jazzylistview.JazzyHelper;
 import com.twotoasters.jazzylistview.JazzyListView;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.drakeet.materialdialog.MaterialDialog;
 import vienan.app.cardgallery.R;
 import vienan.app.cardgallery.adapter.CardAdapter;
 import vienan.app.cardgallery.adapter.SwipeCardAdapter;
@@ -104,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @OnClick(R.id.swipe_card_button)
     public void toSwipeActivity() {
         Intent toSwipeIntent = new Intent(MainActivity.this, SwipeAbleCardsActivity.class);
-        toSwipeIntent.putExtra("lists", (Serializable) lists);
+        toSwipeIntent.putExtra("fromWhere","Main");
+        toSwipeIntent.putExtra("date",createDate);
         toSwipeIntent.putExtra("theme", mSelectedColor);
         startActivity(toSwipeIntent);
     }
@@ -116,6 +122,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        if (lists.isEmpty()){
+            SnackbarManager.show(
+                    Snackbar.with(getApplicationContext()).text(R.string.no_more_cards)
+                            .textColor(Color.WHITE)
+                            .color(mSelectedColor)
+                            .actionLabel("知道了")
+                            .actionListener(new ActionClickListener() {
+                                @Override
+                                public void onActionClicked(Snackbar snackbar) {
+                                    onBackPressed();
+                                }
+                            })
+                            .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                    , this);
+        }
     }
 
     @TargetApi(19)
@@ -152,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 lists = getAll();
             }
         }
+
         //adapter=new SwipeCardAdapter(this, uris);
 
         //cardViewAdapter = new CardViewAdapter(this, R.layout.card_basic_img, lists);
@@ -228,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
+
         }
     }
 
@@ -237,12 +260,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void openDetails(View coverView, CardModel cardModel) {
+    public void openDetails(View coverView, final CardModel cardModel) {
         ImageView image = Views.find(mDetailsLayout, R.id.details_image);
         title = Views.find(mDetailsLayout, R.id.details_title);
         description = Views.find(mDetailsLayout, R.id.details_text);
         title.setOnClickListener(this);
-        description.setOnClickListener(this);
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view=getLayoutInflater().inflate(R.layout.text_detail,null);
+                TextView textView= (TextView) view.findViewById(R.id.descriptionTextView);
+                textView.setText(cardModel.description);
+                new MaterialDialog(MainActivity.this).setView(view).setCanceledOnTouchOutside(true).show();
+            }
+        });
         if (cardModel.imgPath!=null) {
             if (image.getVisibility()!=View.VISIBLE){
                 image.setVisibility(View.VISIBLE);
@@ -253,6 +284,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         title.setText(cardModel.title);
         description.setText(cardModel.description);
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView textView1= (TextView) v;
+                View view= LayoutInflater.from(MainActivity.this).inflate(R.layout.text_detail,null);
+                TextView textView= (TextView) view.findViewById(R.id.descriptionTextView);
+                textView.setText(textView1.getText());
+                new MaterialDialog(MainActivity.this).setView(view).setCanceledOnTouchOutside(true).show();
+            }
+        });
         mUnfoldableView.unfold(coverView, mDetailsLayout);
     }
 

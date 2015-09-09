@@ -10,13 +10,11 @@ import android.widget.TextView;
 
 import com.andtinder.model.CardModel;
 import com.andtinder.view.CardStackAdapter;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.util.List;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import vienan.app.cardgallery.R;
-import vienan.app.cardgallery.activity.SwipeAbleCardsActivity;
-import vienan.app.cardgallery.utils.ImageUtils;
 
 /**
  * Created by vienan on 2015/8/19.
@@ -24,13 +22,18 @@ import vienan.app.cardgallery.utils.ImageUtils;
 public class SwipeCardAdapter extends CardStackAdapter{
     List<vienan.app.cardgallery.model.CardModel> lists;
     Context context;
+
+    public List<vienan.app.cardgallery.model.CardModel> getLists() {
+        return lists;
+    }
+
     public SwipeCardAdapter(Context context,List<vienan.app.cardgallery.model.CardModel> lists) {
         super(context);
         this.context=context;
         this.lists=lists;
     }
     @Override
-    protected View getCardView(int i, CardModel cardModel, View convertView, ViewGroup viewGroup) {
+    protected View getCardView(int i, final CardModel cardModel, View convertView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
         if (convertView==null){
             viewHolder=new ViewHolder();
@@ -44,16 +47,21 @@ public class SwipeCardAdapter extends CardStackAdapter{
             viewHolder= (ViewHolder) convertView.getTag();
         }
         if (cardModel!=null){
-            ImageUtils.imageLoader.displayImage(ImageDownloader.Scheme.FILE.wrap(lists.get(i)
-            .imgPath),viewHolder.imageView,ImageUtils.options);
+           /* ImageUtils.imageLoader.displayImage(ImageDownloader.Scheme.FILE.wrap(lists.get(i)
+            .imgPath),viewHolder.imageView,ImageUtils.options);*/
+            viewHolder.imageView.setImageDrawable(cardModel.getCardImageDrawable());
             viewHolder.title.setText(cardModel.getTitle());
             viewHolder.description.setText(cardModel.getDescription());
+            viewHolder.description.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View view=LayoutInflater.from(context).inflate(R.layout.text_detail,null);
+                    TextView textView= (TextView) view.findViewById(R.id.descriptionTextView);
+                    textView.setText(cardModel.getDescription());
+                    new MaterialDialog(context).setView(view).setCanceledOnTouchOutside(true).show();
+                }
+            });
         }
-        if (super.getItem(i)==null) {
-            SwipeAbleCardsActivity activity= (SwipeAbleCardsActivity) this.getContext();
-            activity.onBackPressed();
-        }
-        Log.i("i",""+i);
         return convertView;
     }
     class  ViewHolder{

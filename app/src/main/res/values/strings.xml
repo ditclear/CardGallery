@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">CardGallery</string>
+    <string name="app_name">CardNote</string>
+    <string name="main_name">CardGallery</string>
     <string name="editCard_name">WRITE Sth..</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -10,11 +11,11 @@
     <string name="simple_CameraAndEditCutComponent">相机连接图片编辑组件</string>
     <string name="description">说点什么...</string>
     <string name="title">标题</string>
-    <string name="profile">PROFILE</string>
+    <string name="favorites">FAVORITES</string>
     <string name="theme">THEME</string>
     <string name="activity">STYLES</string>
-    <string name="settings">SETTINGS</string>
-    <string name="scan_card">CARDS</string>
+    <string name="about">ABOUT</string>
+    <string name="scan_card">NoteGallery</string>
     <string name="color_picker_default_title">THEME</string>
     <string name="color_swatch_description">Color %1$d</string>
     <string name="color_swatch_description_selected">Color %1$d selected</string>

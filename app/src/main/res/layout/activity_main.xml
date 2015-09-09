@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/app_name"
+            android:text="@string/main_name"
             android:textColor="@color/lsq_color_white"
             android:textSize="@dimen/guillotine_item_text_size" />
         <ImageView
@@ -101,6 +101,9 @@
             android:layout_marginRight="@dimen/default_margin"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="@dimen/default_margin"
+            android:minHeight="150dp"
+            android:maxLines="8"
+            android:ellipsize="end"
             android:textSize="14sp"
             android:textColor="#000"
             android:lineSpacingExtra="4sp" />

@@ -18,9 +18,14 @@ public class CardModel extends Model implements Serializable{
         this.description = description;
     }
 
+    public CardModel(int star) {
+        this.star = star;
+    }
+
     public CardModel() {
         super();
     }
+
     @Column(name = "imgPath",index = true)
     public String imgPath;
 
@@ -36,6 +41,9 @@ public class CardModel extends Model implements Serializable{
     @Column(name = "type")
     public String type;
 
+    @Column(name = "star")
+    public int star;
+
     @Override
     public String toString() {
         return "CardModel{" +
@@ -44,6 +52,7 @@ public class CardModel extends Model implements Serializable{
                 ", description='" + description + '\'' +
                 ", date='" + date + '\'' +
                 ", type='" + type + '\'' +
+                ", star=" + star +
                 '}';
     }
 }

@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ import android.widget.Toast;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.andexert.library.RippleView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.konifar.fab_transformation.FabTransformation;
 import com.melnykov.fab.FloatingActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -50,6 +53,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
 import vienan.app.cardgallery.R;
 import vienan.app.cardgallery.adapter.StatusExpandAdapter;
 import vienan.app.cardgallery.colorpicker.ColorPickerDialog;
@@ -70,6 +77,8 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
             "SLIDE_IN"};
     @Bind(R.id.more)
     RippleView rippleView;
+    @Bind(R.id.group_tiao)
+    View groupTiao;
     private int[] mColor;
     @Bind(R.id.content_hamburger)
     ImageView contentHamburger;
@@ -91,11 +100,12 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
     SystemBarTintManager tintManager;
     SharedPreferences preferences;
     private int selectedStyle;
-    int mSelectedColor;
+    public  static int mSelectedColor;
     private View guillotineMenu;
     GuillotineAnimation guillotineAnimation;
     List<GroupStatusEntity> lists;
     ImageButton ib_capture, ib_album;
+    TourGuide mTourGuideHandler;
     // 组件委托
     TuSdkComponent.TuSdkComponentDelegate delegate = new TuSdkComponent.TuSdkComponentDelegate() {
         @Override
@@ -165,6 +175,9 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         if (guillotineMenu.getVisibility() == View.VISIBLE) {
             return;
         }
+        if (mTourGuideHandler!=null) {
+            mTourGuideHandler.cleanUp();
+        }
         FabTransformation.with(fab)
                 .transformTo(toolbarFooter);
         if (ib_capture == null || ib_album == null) {
@@ -173,6 +186,18 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         }
         ib_capture.setOnClickListener(this);
         ib_album.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        if (lists.size() == 0) {
+            groupTiao.setVisibility(View.GONE);
+        } else {
+            groupTiao.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.SlideInRight).playOn(expandlistView);
+            statusAdapter.closeAllItem();
+        }
+        super.onResume();
     }
 
     @Override
@@ -192,11 +217,20 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
-
         context = this;
         expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
         initView();
         initExpandListView();
+        if (lists.size() == 0) {
+            mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
+                    .setPointer(new Pointer())
+                    .setToolTip(new ToolTip().setTitle("Welcome!")
+                            .setDescription("Click on Get Started to begin...")
+                            .setBackgroundColor(mSelectedColor)
+                            .setGravity(Gravity.TOP | Gravity.LEFT))
+                    .setOverlay(new Overlay())
+                    .playOn(fab);
+        }
     }
 
     private void deleteAll() {
@@ -235,8 +269,8 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                 .setGuillotineListener(new GuillotineListener() {
                     @Override
                     public void onGuillotineOpened() {
-                        viewHelper.setAlpha(1.0f);
                         viewHelper.setVisibility(View.VISIBLE);
+                        expandlistView.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -254,6 +288,8 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                             alphaAnimation.setDuration(800);
                             viewHelper.startAnimation(alphaAnimation);*/
                             viewHelper.setVisibility(View.GONE);
+                            expandlistView.setVisibility(View.VISIBLE);
+                            YoYo.with(Techniques.BounceInDown).playOn(expandlistView);
                         }
 
 
@@ -264,10 +300,10 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         rippleView.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
             public void onComplete(RippleView rippleView) {
-                Intent addNoteIntent=new Intent(TimeLineActivity.this,EditCardActivity.class);
+                Intent addNoteIntent = new Intent(TimeLineActivity.this, EditCardActivity.class);
                 addNoteIntent.putExtra("theme", mSelectedColor);
                 addNoteIntent.putExtra("style", selectedStyle);
-                startActivityForResult(addNoteIntent,TO_EDIT);
+                startActivityForResult(addNoteIntent, TO_EDIT);
             }
         });
 
@@ -311,6 +347,9 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
             public boolean onGroupClick(ExpandableListView parent, View v,
                                         int groupPosition, long id) {
                 // TODO Auto-generated method stub
+                if (guillotineMenu.getVisibility() == View.VISIBLE) {
+                    return true;
+                }
                 String date = statusAdapter.getGroupList().get(groupPosition).getGroupName();
                 Intent intent = new Intent(TimeLineActivity.this, MainActivity.class);
                 intent.putExtra("theme", mSelectedColor);
@@ -336,36 +375,32 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                 if (resultCode == RESULT_OK) {
                     CardModel model = (CardModel) data.getSerializableExtra("cardModel");
                     model.save();
-                    toast("添加成功");
-                    if (lists.size()>0&&lists.get(0).getGroupName().equals(model.date)) {
+                    if (lists.size() > 0 && lists.get(0).getGroupName().equals(model.date)) {
                         ChildStatusEntity childStatusEntity = addChildStatusEntity(model);
-                        lists.get(0).getChildList().add(childStatusEntity);
+                        lists.get(0).getChildList().add(0,childStatusEntity);
                     } else {
                         GroupStatusEntity group = new GroupStatusEntity();
                         group.setGroupName(model.date);
                         List<ChildStatusEntity> childList = new ArrayList<ChildStatusEntity>();
                         childList.add(addChildStatusEntity(model));
                         group.setChildList(childList);
-                        lists.add(group);
+                        lists.add(0,group);
                         expandlistView.expandGroup(0);
+                        expandlistView.expandGroup(lists.size()-1);
                     }
 
                     statusAdapter.notifyDataSetChanged();
 
                 }
-
+                break;
         }
     }
 
     @NonNull
     private ChildStatusEntity addChildStatusEntity(CardModel model) {
-        ChildStatusEntity childStatusEntity = new ChildStatusEntity();
-        childStatusEntity.setCompleteTime(model.title);
-        childStatusEntity.setCard_type(model.type);
-        childStatusEntity.setIsfinished(true);
+        ChildStatusEntity childStatusEntity = new ChildStatusEntity(model);
         return childStatusEntity;
     }
-
 
     private List<GroupStatusEntity> getListData() {
         List<GroupStatusEntity> groupList;
@@ -378,7 +413,7 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
             groupStatusEntity.setGroupName(strArray[i]);
             titles = new Select().from(CardModel.class).where("date=?", new Object[]{strArray[i]}).execute();
             List<ChildStatusEntity> childList = new ArrayList<ChildStatusEntity>();
-            for (int j = 0; j < titles.size(); j++) {
+            for (int j = titles.size()-1; j >=0; j--) {
                 ChildStatusEntity childStatusEntity = addChildStatusEntity(titles.get(j));
                 childList.add(childStatusEntity);
             }
@@ -450,6 +485,10 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.profile_group:
                 viewHelp();
+                Intent toSwipeIntent = new Intent(TimeLineActivity.this, SwipeAbleCardsActivity.class);
+                toSwipeIntent.putExtra("fromWhere","TimeLine");
+                toSwipeIntent.putExtra("theme", mSelectedColor);
+                startActivity(toSwipeIntent);
                 break;
             case R.id.feed_group:
 
@@ -524,6 +563,8 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void run() {
                 viewHelper.setVisibility(View.GONE);
+                expandlistView.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.Landing).playOn(expandlistView);
             }
         }, 300);
 
@@ -554,4 +595,5 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         guillotineMenu.findViewById(R.id.menu_toolbar).setBackgroundColor(color);
         header_helper.setBackgroundColor(color);
     }
+
 }

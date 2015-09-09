@@ -27,7 +27,7 @@
 
         <vienan.app.cardgallery.view.CanaroTextView
             style="@style/TextView.GuillotineItem"
-            android:text="@string/profile" />
+            android:text="@string/favorites" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,6 +70,6 @@
 
         <vienan.app.cardgallery.view.CanaroTextView
             style="@style/TextView.GuillotineItem"
-            android:text="@string/settings" />
+            android:text="@string/about" />
     </LinearLayout>
 </LinearLayout>

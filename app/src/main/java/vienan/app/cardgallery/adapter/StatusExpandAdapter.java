@@ -1,6 +1,7 @@
 package vienan.app.cardgallery.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +9,27 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Update;
+import com.daimajia.swipe.SwipeLayout;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import me.drakeet.materialdialog.MaterialDialog;
 import vienan.app.cardgallery.R;
+import vienan.app.cardgallery.model.CardModel;
 import vienan.app.cardgallery.model.ChildStatusEntity;
 import vienan.app.cardgallery.model.GroupStatusEntity;
+import vienan.app.cardgallery.utils.ImageUtils;
 
-public class StatusExpandAdapter extends BaseExpandableListAdapter {
+public class StatusExpandAdapter extends BaseExpandableListAdapter{
 	private LayoutInflater inflater = null;
 	private List<GroupStatusEntity> groupList;
 	private Context context;
-
+	private List<SwipeLayout> swipeLayout=new ArrayList<SwipeLayout>();
 	public List<GroupStatusEntity> getGroupList() {
 		return groupList;
 	}
@@ -106,18 +115,18 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
 		}
 		holder.groupName = (TextView) convertView
 				.findViewById(R.id.one_status_name);
-
 		holder.groupName.setText(groupList.get(groupPosition).getGroupName());
 
 		return convertView;
 	}
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition,
+	public View getChildView(final int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		ChildViewHolder viewHolder = null;
-		ChildStatusEntity entity = (ChildStatusEntity) getChild(groupPosition,
+		final ChildStatusEntity entity = (ChildStatusEntity) getChild(groupPosition,
 				childPosition);
+		final CardModel model=entity.getCardModel();
 		if (convertView != null) {
 			viewHolder = (ChildViewHolder) convertView.getTag();
 		} else {
@@ -126,16 +135,165 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
 			viewHolder.card_type= (ImageView) convertView.findViewById(R.id.iv_type);
 			viewHolder.twoStatusTime = (TextView) convertView
 					.findViewById(R.id.two_complete_time);
+			viewHolder.swipeLayout= (SwipeLayout) convertView.findViewById(R.id.sample);
+			swipeLayout.add(viewHolder.swipeLayout);
+			viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewWithTag("Bottom2"));
+			viewHolder.iv_star= (ImageView) convertView.findViewById(R.id.star);
+			viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+				@Override
+				public void onStartOpen(SwipeLayout swipeLayout) {
+					ImageView starImg=(ImageView)swipeLayout.findViewById(R.id.star);
+					if (model.star==1){
+						starImg.setImageResource(R.mipmap.ic_star_white_48dp);
+					}else if (model.star==0){
+						starImg.setImageResource(R.mipmap.ic_star_border_white_48dp);
+					}
+				}
+
+				@Override
+				public void onOpen(SwipeLayout swipeLayout) {
+				}
+
+				@Override
+				public void onStartClose(SwipeLayout swipeLayout) {
+
+				}
+
+				@Override
+				public void onClose(SwipeLayout swipeLayout) {
+				}
+
+				@Override
+				public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+
+				}
+
+				@Override
+				public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+
+				}
+			});
+
+
+			viewHolder.iv_star.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(final View v) {
+					SweetAlertDialog dialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+							.setCancelText("不确定")
+							.showCancelButton(true).setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+								@Override
+								public void onClick(SweetAlertDialog sweetAlertDialog) {
+									sweetAlertDialog.cancel();
+								}
+							});
+					if (model.star == 0) {
+						dialog.setTitleText("收藏").setContentText("添加到我的收藏夹？");
+						dialog.setConfirmText("确定").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sweetAlertDialog) {
+								((ImageView) v).setImageResource(R.mipmap.ic_star_white_48dp);
+								model.star = 1;
+								new Update(CardModel.class).set("star=?",model.star).where("Id=?",model.getId()).execute();
+								sweetAlertDialog.cancel();
+							}
+						}).show();
+
+					} else if (model.star == 1) {
+						dialog.setTitleText("取消收藏").setContentText("从收藏夹中移除？");
+						dialog.setConfirmText("确定").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sweetAlertDialog) {
+								((ImageView) v).setImageResource(R.mipmap.ic_star_border_white_48dp);
+								model.star = 0;
+								new Update(CardModel.class).set("star=?",model.star).where("Id=?",model.getId()).execute();
+								sweetAlertDialog.cancel();
+							}
+						}).show();
+
+					}
+				}
+			});
+			convertView.findViewById(R.id.trash).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+							.setTitleText("Are you sure?")
+							.setContentText("Note将会被删除!")
+							.setCancelText("不删")
+							.setConfirmText("删")
+							.showCancelButton(true)
+							.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+								@Override
+								public void onClick(SweetAlertDialog sDialog) {
+									// reuse previous dialog instance, keep widget user state, reset them if you need
+									sDialog.setTitleText("Cancelled!")
+											.setContentText("操作取消 :)")
+											.setConfirmText("OK")
+											.showCancelButton(false)
+											.setCancelClickListener(null)
+											.setConfirmClickListener(null)
+											.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+								}
+							})
+							.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+								@Override
+								public void onClick(final SweetAlertDialog sDialog) {
+									CardModel.delete(CardModel.class, model.getId());
+									groupList.get(groupPosition).getChildList().remove(childPosition);
+									if (groupList.get(groupPosition).getChildList().size() == 0) {
+										groupList.remove(groupPosition);
+									}
+									notifyDataSetChanged();
+									sDialog.setTitleText("Deleted!")
+											.setContentText("Note已被删除!")
+											.setConfirmText("OK")
+											.showCancelButton(false)
+											.setCancelClickListener(null)
+											.setConfirmClickListener(null)
+											.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+								}
+							})
+							.show();
+				}
+			});
+
 		}
-		if (((ChildStatusEntity) getChild(groupPosition,childPosition)).getCard_type().equals("cardNote")){
+		if (model.type.equals("cardNote")){
 			Picasso.with(context).load(R.mipmap.ic_image_white_24dp).into(viewHolder.card_type);
 			viewHolder.card_type.setBackgroundResource(R.drawable.circle_type);
 		}else {
 			Picasso.with(context).load(R.mipmap.ic_mode_edit_white_24dp).into(viewHolder.card_type);
 			viewHolder.card_type.setBackgroundResource(R.drawable.type_edit);
 		}
-		viewHolder.twoStatusTime.setText(entity.getCompleteTime());
-
+		viewHolder.twoStatusTime.setText(model.title);
+		convertView.findViewById(R.id.item_surface).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d("Visibility", "" + v.getVisibility());
+				if (v.getVisibility() != View.VISIBLE) {
+					return;
+				}
+				final MaterialDialog mMaterialDialog = new MaterialDialog(context).setCanceledOnTouchOutside(true);
+				String card_type = model.type;
+				if (card_type.equals("note")) {
+					mMaterialDialog.setTitle(model.title)
+							.setMessage(model.description);
+				} else {
+					final View cardView = inflater.inflate(R.layout.card_big_img, null);
+					ImageView imageView = (ImageView) cardView.findViewById(R.id.imageView);
+					TextView title = (TextView) cardView.findViewById(R.id.titleTextView);
+					TextView description = (TextView) cardView.findViewById(R.id.descriptionTextView);
+					ImageUtils.imageLoader.displayImage(
+							ImageDownloader.Scheme.FILE.wrap(model.imgPath)
+							, imageView, ImageUtils.options);
+					title.setText(model.title);
+					description.setText(model.description);
+					mMaterialDialog.setView(cardView);
+				}
+				mMaterialDialog.show();
+			}
+		});
 		convertView.setTag(viewHolder);
 		return convertView;
 	}
@@ -146,11 +304,20 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
 		return true;
 	}
 
+	public void closeAllItem(){
+		for (int i = 0; i <swipeLayout.size() ; i++) {
+			swipeLayout.get(i).close();
+		}
+	}
+
 	private class GroupViewHolder {
+		ImageView groupImg;
 		TextView groupName;
 	}
 
 	private class ChildViewHolder {
+		public SwipeLayout swipeLayout;
+		public ImageView iv_star;
 		public ImageView card_type;
 		public TextView twoStatusTime;
 	}

@@ -176,7 +176,7 @@ public class SwipeAbleCardsActivity extends Activity implements
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 CardModel model=lists.get(index-1);
                 model.star = 0;
-                Log.d("model", model.toString()+ model.getId());
+                Log.d("model",""+index+ model.toString()+ model.getId());
                 new Update(CardModel.class).set("star=?", model.star).where("Id=?", model.getId()).execute();
                 hasChanged=true;
                 sweetAlertDialog.cancel();
@@ -202,6 +202,9 @@ public class SwipeAbleCardsActivity extends Activity implements
                             .actionListener(new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
+                                    Intent back_to_timeLine=new Intent();
+                                    back_to_timeLine.putExtra("hasChanged",hasChanged);
+                                    setResult(RESULT_OK,back_to_timeLine);
                                     onBackPressed();
                                 }
                             })

@@ -72,6 +72,7 @@ import vienan.app.cardgallery.view.WheelView;
 public class TimeLineActivity extends AppCompatActivity implements View.OnClickListener {
     private static final long RIPPLE_DURATION = 250;
     private final static int TO_EDIT = 1;
+    private final static int TO_SWIPE=2;
     private static final String[] STYLES = new String[]{"STANDARD", "GROW", "CARDS", "CURL",
             "WAVE", "FLIP", "FLY", "REVERSE_FLY", "HELIX", "FAN", "TILT", "ZIPPER", "FADE", "TWIRL",
             "SLIDE_IN"};
@@ -388,9 +389,16 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                         expandlistView.expandGroup(0);
                         expandlistView.expandGroup(lists.size()-1);
                     }
-
                     statusAdapter.notifyDataSetChanged();
 
+                }
+                break;
+            case TO_SWIPE:
+                if (resultCode == RESULT_OK) {
+                    boolean hasChanged=data.getBooleanExtra("hasChanged",false);
+                    if (hasChanged){
+                        statusAdapter.notifyDataSetChanged();
+                    }
                 }
                 break;
         }
@@ -488,7 +496,7 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                 Intent toSwipeIntent = new Intent(TimeLineActivity.this, SwipeAbleCardsActivity.class);
                 toSwipeIntent.putExtra("fromWhere","TimeLine");
                 toSwipeIntent.putExtra("theme", mSelectedColor);
-                startActivity(toSwipeIntent);
+                startActivityForResult(toSwipeIntent,TO_SWIPE);
                 break;
             case R.id.feed_group:
 
@@ -595,5 +603,8 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         guillotineMenu.findViewById(R.id.menu_toolbar).setBackgroundColor(color);
         header_helper.setBackgroundColor(color);
     }
+    public void updateView(int groupPosition,int childPosition) {
+        int visiblePosition = expandlistView.getFirstVisiblePosition();
 
+    }
 }

@@ -33,7 +33,6 @@
         <com.andtinder.view.CardContainer
             android:id="@+id/layout_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            app:orientation="ordered"/>
+            android:layout_height="fill_parent" />
     </LinearLayout>
 </FrameLayout>

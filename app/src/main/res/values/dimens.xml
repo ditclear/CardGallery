@@ -23,4 +23,5 @@
     <dimen name="item_text_size_small">9sp</dimen>
     <dimen name="expandable_selector_margin">10dp</dimen>
     <dimen name="background_radius">100dp</dimen>
+    <dimen name="welcome_title">30sp</dimen>
 </resources>

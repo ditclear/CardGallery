@@ -34,6 +34,7 @@
             android:id="@+id/swipe_card_button"
             style="@style/ImageView.Hamburger"
             android:layout_gravity="right"
+            android:background="@drawable/color_picker_swatch"
             android:src="@drawable/ic_equalizer_white_24dp"/>
     </android.support.v7.widget.Toolbar>
 

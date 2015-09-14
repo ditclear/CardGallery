@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         if (lists.isEmpty()){
             SnackbarManager.show(
-                    Snackbar.with(getApplicationContext()).text(R.string.no_more_cards)
+                    Snackbar.with(getApplicationContext()).text(R.string.no_more_cards_main)
                             .textColor(Color.WHITE)
                             .color(mSelectedColor)
                             .actionLabel("知道了")

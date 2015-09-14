@@ -145,7 +145,6 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter{
 			viewHolder.iv_star= (ImageView) convertView.findViewById(R.id.star);
 			viewHolder.iv_trash= (ImageView) convertView.findViewById(R.id.trash);
 			convertView.setTag(viewHolder);
-			Log.d("tag",convertView.getTag().toString());
 		}
 
 		if (model.star == 0) {
@@ -173,7 +172,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter{
 							((ImageView) v).setImageResource(R.mipmap.ic_star_white_48dp);
 							model.star = 1;
 							new Update(CardModel.class).set("star=?",model.star).where("Id=?",model.getId()).execute();
-							notifyDataSetChanged();
+							//notifyDataSetChanged();
 							sweetAlertDialog.cancel();
 						}
 					}).show();
@@ -186,7 +185,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter{
 							((ImageView) v).setImageResource(R.mipmap.ic_star_border_white_48dp);
 							model.star = 0;
 							new Update(CardModel.class).set("star=?",model.star).where("Id=?",model.getId()).execute();
-							notifyDataSetChanged();
+							//notifyDataSetChanged();
 							sweetAlertDialog.cancel();
 						}
 					}).show();
@@ -255,8 +254,11 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter{
 				final MaterialDialog mMaterialDialog = new MaterialDialog(context).setCanceledOnTouchOutside(true);
 				String card_type = model.type;
 				if (card_type.equals("note")) {
+					View view=LayoutInflater.from(context).inflate(R.layout.text_detail,null);
+					TextView textView= (TextView) view.findViewById(R.id.descriptionTextView);
+					textView.setText(model.description);
 					mMaterialDialog.setTitle(model.title)
-							.setMessage(model.description);
+							.setContentView(view);
 				} else {
 					final View cardView = inflater.inflate(R.layout.card_big_img, null);
 					ImageView imageView = (ImageView) cardView.findViewById(R.id.imageView);

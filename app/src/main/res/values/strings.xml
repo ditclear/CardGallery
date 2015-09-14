@@ -21,4 +21,6 @@
     <string name="color_swatch_description_selected">Color %1$d selected</string>
     <string name="editCard_tip">标题或内容未填写</string>
     <string name="no_more_cards">没有更多图片</string>
+    <string name="welcome_title">CardGallery~!</string>
+    <string name="no_more_cards_main">还没有图片，快去添加</string>
 </resources>

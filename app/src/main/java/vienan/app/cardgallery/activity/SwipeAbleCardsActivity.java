@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.andtinder.model.Orientations;
 import com.andtinder.view.CardContainer;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -115,6 +116,7 @@ public class SwipeAbleCardsActivity extends Activity implements
             adapter.add(model);
         }
         mCardContainer.setAdapter(adapter);
+        mCardContainer.setOrientation(Orientations.Orientation.Ordered);
     }
 
     private Drawable getImgDrawable(CardModel cardModel) {
@@ -186,14 +188,15 @@ public class SwipeAbleCardsActivity extends Activity implements
 
     @Override
     public void onDislike() {
-
         back();
+        adapter.getLists().set(index - 1, null);
 
     }
 
     private void back() {
         index++;
-        if (index == adapter.getCount()) {
+        if (index== adapter.getCount()) {
+            adapter.getLists().set( adapter.getCount()-1,null);
             SnackbarManager.show(
                     Snackbar.with(getApplicationContext()).text(R.string.no_more_cards)
                             .textColor(Color.WHITE)

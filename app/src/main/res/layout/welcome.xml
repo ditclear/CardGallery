@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/splash">
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/iv_icon"
+        android:src="@mipmap/ic_menu_white_48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="129dp" />
+    <vienan.app.cardgallery.view.CanaroTextView
+        android:id="@+id/welcome_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/welcome_title"
+        android:textColor="@color/lsq_color_white"
+        android:textSize="@dimen/welcome_title" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcome_message"
+        android:layout_below="@id/welcome_title"
+        android:src="@drawable/welcome_message"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

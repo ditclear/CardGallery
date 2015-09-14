@@ -23,6 +23,7 @@ public class SwipeCardAdapter extends CardStackAdapter{
     List<vienan.app.cardgallery.model.CardModel> lists;
     Context context;
 
+
     public List<vienan.app.cardgallery.model.CardModel> getLists() {
         return lists;
     }
@@ -34,10 +35,10 @@ public class SwipeCardAdapter extends CardStackAdapter{
     }
     @Override
     protected View getCardView(int i, final CardModel cardModel, View convertView, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
+        ViewHolder viewHolder=null;
         if (convertView==null){
             viewHolder=new ViewHolder();
-            convertView= LayoutInflater.from(this.getContext()).inflate(R.layout.card_big_img,null);
+            convertView= LayoutInflater.from(context).inflate(R.layout.card_big_img,null);
             viewHolder.imageView= (ImageView) convertView.findViewById(R.id.imageView);
             viewHolder.title= (TextView) convertView.findViewById(R.id.titleTextView);
             viewHolder.description= (TextView) convertView.findViewById(R.id.descriptionTextView);
@@ -46,6 +47,7 @@ public class SwipeCardAdapter extends CardStackAdapter{
             Log.e("viewHolder", convertView.getTag().toString());
             viewHolder= (ViewHolder) convertView.getTag();
         }
+        Log.d("cardModel","cardModel"+i);
         if (cardModel!=null){
            /* ImageUtils.imageLoader.displayImage(ImageDownloader.Scheme.FILE.wrap(lists.get(i)
             .imgPath),viewHolder.imageView,ImageUtils.options);*/
@@ -64,7 +66,7 @@ public class SwipeCardAdapter extends CardStackAdapter{
         }
         return convertView;
     }
-    class  ViewHolder{
+    private class  ViewHolder{
         public ImageView imageView;
         public TextView title,description;
     }

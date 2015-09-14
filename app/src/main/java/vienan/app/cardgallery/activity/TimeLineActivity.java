@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +54,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import tourguide.tourguide.Overlay;
 import tourguide.tourguide.Pointer;
 import tourguide.tourguide.ToolTip;
@@ -225,8 +227,8 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         if (lists.size() == 0) {
             mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
                     .setPointer(new Pointer())
-                    .setToolTip(new ToolTip().setTitle("Welcome!")
-                            .setDescription("Click on Get Started to begin...")
+                    .setToolTip(new ToolTip().setTitle("欢迎!")
+                            .setDescription("点击按钮来丰富应用...")
                             .setBackgroundColor(mSelectedColor)
                             .setGravity(Gravity.TOP | Gravity.LEFT))
                     .setOverlay(new Overlay())
@@ -526,7 +528,6 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                         selectedStyle = selectedIndex - 2;
                     }
                 });
-
                 new AlertDialog.Builder(this)
                         .setTitle("STYLE")
                         .setView(outerView)
@@ -539,7 +540,26 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                         .show();
                 break;
             case R.id.settings_group:
-                viewHelp();
+                new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText("卡片日记~！")
+                        .setContentText("STYLE中主要定义的cardGallery中滚动的样式,您可以查看滚动样式，选择自己喜欢的style")
+                        .setCustomImage(R.mipmap.ic_menu_36pt_3x)
+                        .setConfirmText("查看style")
+                        .setCancelText("知道了")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse("http://lab.hakim.se/scroll-effects/"));
+                                startActivity(intent);
+                                sweetAlertDialog.cancel();
+                                viewHelp();
+                            }
+                        })
+                        .showCancelButton(true)
+                        .setCancelClickListener(null)
+                        .show();
+
                 break;
             case R.id.details_title:
 

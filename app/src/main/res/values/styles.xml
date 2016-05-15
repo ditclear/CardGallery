@@ -1,22 +1,5 @@
 <resources>
-
- <!--   &lt;!&ndash; Base application theme. &ndash;&gt;
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-    </style>
-
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/pink</item>
-        <item name="android:backgroundStacked">@color/pink</item>
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
-    </style>
-
-    <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#fff</item>
-    </style>
--->
     <style name="LinearLayout" />
-
     <style name="LinearLayout.GuillotineItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -90,5 +73,19 @@
         <item name="android:layout_margin">@dimen/item_margin</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textSize">@dimen/item_text_size</item>
+    </style>
+    <style name="MainNoteView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="MyExpandedTextAppearance" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="MyCollapsedTextAppearance" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">25sp</item>
     </style>
 </resources>

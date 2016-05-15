@@ -4,14 +4,19 @@
     android:layout_height="match_parent"
     android:background="@mipmap/splash">
 
-
+    <RelativeLayout
+        android:id="@+id/rl_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="129dp"
+        android:layout_centerHorizontal="true">
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/iv_icon"
         android:src="@mipmap/ic_menu_white_48dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="129dp" />
+         />
     <vienan.app.cardgallery.view.CanaroTextView
         android:id="@+id/welcome_title"
         android:layout_width="wrap_content"
@@ -29,4 +34,5 @@
         android:layout_below="@id/welcome_title"
         android:src="@drawable/welcome_message"
         android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -3,9 +3,6 @@ package vienan.app.cardgallery;
 import android.graphics.Typeface;
 
 import com.activeandroid.ActiveAndroid;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.joanzapata.iconify.fonts.MaterialModule;
 
 import org.lasque.tusdk.core.TuSdk;
 
@@ -22,8 +19,6 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Iconify.with(new FontAwesomeModule())
-                .with(new MaterialModule());
     /**
      * ！！！！！！！！！！！！！！！！！！！！！！！！！特别提示信息要长！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
      * 关于TuSDK体积（SDK编译后仅为0.9MB）：
@@ -42,7 +37,7 @@ public class MyApplication extends com.activeandroid.app.Application {
 
     getApplicationContext(),
 
-    "980a1c30dff7827d-00-shlwn1");
+    "b036776d9fc97063-01-shlwn1");
 
     // 如果不想继承TuApplication，直接在自定义Application.onCreate()方法中调用以下方法
     // 初始化全局变量

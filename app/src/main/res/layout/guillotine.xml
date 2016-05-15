@@ -17,9 +17,23 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/profile_group"
+        android:id="@+id/all_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_marginTop="@dimen/guillotine_medium_margin">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@mipmap/ic_adjust_white_24dp"
+            android:alpha="0.7"/>
+
+        <vienan.app.cardgallery.view.CanaroTextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/allCard" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_group"
+        style="@style/LinearLayout.GuillotineItem">
 
         <ImageView
             style="@style/ImageView.GuillotineItem"
@@ -56,9 +70,7 @@
             android:text="@string/activity" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/guillotine_divider_height" />
+
 
     <LinearLayout
         android:id="@+id/settings_group"

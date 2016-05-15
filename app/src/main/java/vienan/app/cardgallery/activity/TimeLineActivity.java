@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.andexert.library.RippleView;
 import com.daimajia.androidanimations.library.Techniques;
@@ -55,6 +54,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.greenrobot.event.EventBus;
 import tourguide.tourguide.Overlay;
 import tourguide.tourguide.Pointer;
 import tourguide.tourguide.ToolTip;
@@ -66,6 +66,7 @@ import vienan.app.cardgallery.colorpicker.ColorPickerSwatch;
 import vienan.app.cardgallery.model.CardModel;
 import vienan.app.cardgallery.model.ChildStatusEntity;
 import vienan.app.cardgallery.model.GroupStatusEntity;
+import vienan.app.cardgallery.model.MessageEvent;
 import vienan.app.cardgallery.view.WheelView;
 
 /**
@@ -104,6 +105,7 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
     SharedPreferences preferences;
     private int selectedStyle;
     public  static int mSelectedColor;
+    private int mSelectedIndex;
     private View guillotineMenu;
     GuillotineAnimation guillotineAnimation;
     List<GroupStatusEntity> lists;
@@ -160,6 +162,7 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
             };
 
 
+
     private void toEditActivity(TuSdkResult result) {
         Log.i("image2", result.toString());
         Log.d("img2", result.imageSqlInfo.path);
@@ -180,7 +183,9 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         }
         if (mTourGuideHandler!=null) {
             mTourGuideHandler.cleanUp();
+            contentHamburger.setClickable(true);
         }
+
         FabTransformation.with(fab)
                 .transformTo(toolbarFooter);
         if (ib_capture == null || ib_album == null) {
@@ -190,17 +195,37 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         ib_capture.setOnClickListener(this);
         ib_album.setOnClickListener(this);
     }
-
     @Override
     protected void onResume() {
+        super.onResume();
+        listViewAnim();
+        Log.d("model", "onResume");
+        mSelectedIndex=preferences.getInt("mSelectedIndex",1);
+
+    }
+
+    private void listViewAnim() {
         if (lists.size() == 0) {
             groupTiao.setVisibility(View.GONE);
         } else {
             groupTiao.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.SlideInRight).playOn(expandlistView);
-            statusAdapter.closeAllItem();
+
         }
-        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(MessageEvent event){
+        if(event!=null){
+            if (event.hasChanged){
+                statusAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -212,32 +237,21 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         if (mColor == null) {
             mColor = getColorArray();
         }
-        mSelectedColor = preferences.getInt("theme", mColor[0]);
+        mSelectedColor = preferences.getInt("theme", mColor[1]);
         selectedStyle = preferences.getInt("style", JazzyHelper.GROW);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
         }
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
+        EventBus.getDefault().register(this);
         context = this;
         expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
         initView();
         initExpandListView();
-        if (lists.size() == 0) {
-            mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
-                    .setPointer(new Pointer())
-                    .setToolTip(new ToolTip().setTitle("欢迎!")
-                            .setDescription("点击按钮来丰富应用...")
-                            .setBackgroundColor(mSelectedColor)
-                            .setGravity(Gravity.TOP | Gravity.LEFT))
-                    .setOverlay(new Overlay())
-                    .playOn(fab);
-        }
-    }
 
-    private void deleteAll() {
-        new Delete().from(CardModel.class).execute();
     }
 
     @TargetApi(19)
@@ -278,31 +292,42 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onGuillotineClosed() {
-
                         if (toolbarFooter.getVisibility() == View.VISIBLE) {
                             FabTransformation.with(fab).transformFrom(toolbarFooter);
                         }
                         if (viewHelper.getVisibility() == View.VISIBLE) {
-                            /*//初始化
-                            float x = viewHelper.getX();
-                            float y = viewHelper.getY();
-                            //初始化
-                            Animation alphaAnimation = new AlphaAnimation(0.0f, 0.0f);
-                            alphaAnimation.setDuration(800);
-                            viewHelper.startAnimation(alphaAnimation);*/
                             viewHelper.setVisibility(View.GONE);
                             expandlistView.setVisibility(View.VISIBLE);
                             YoYo.with(Techniques.BounceInDown).playOn(expandlistView);
                         }
-
-
                     }
                 })
                 .build();
-        guillotineAnimation.close();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                viewHelp();
+                if (lists.size() == 0) {
+                mTourGuideHandler = TourGuide.init(TimeLineActivity.this).with(TourGuide.Technique.Click)
+                        .setPointer(new Pointer())
+                        .setToolTip(new ToolTip().setTitle("欢迎!")
+                                .setDescription("点击按钮来丰富应用...")
+                                .setBackgroundColor(mSelectedColor)
+                                .setGravity(Gravity.TOP | Gravity.LEFT))
+                        .setOverlay(new Overlay())
+                        .playOn(fab);
+                if (mTourGuideHandler!=null){
+                    contentHamburger.setClickable(false);
+                }
+                }
+            }
+        }, 800);
         rippleView.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
             public void onComplete(RippleView rippleView) {
+                if (!contentHamburger.isClickable()){
+                    return;
+                }
                 Intent addNoteIntent = new Intent(TimeLineActivity.this, EditCardActivity.class);
                 addNoteIntent.putExtra("theme", mSelectedColor);
                 addNoteIntent.putExtra("style", selectedStyle);
@@ -312,7 +337,6 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-
     /**
      * 初始化GuillotineMenuItem
      */
@@ -320,10 +344,12 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         LinearLayout profile_group = (LinearLayout) guillotineMenu.findViewById(R.id.profile_group);
         LinearLayout feed_group = (LinearLayout) guillotineMenu.findViewById(R.id.feed_group);
         LinearLayout style_group = (LinearLayout) guillotineMenu.findViewById(R.id.style_group);
+        LinearLayout allCard_group = (LinearLayout) guillotineMenu.findViewById(R.id.all_group);
         LinearLayout settings_group = (LinearLayout) guillotineMenu.findViewById(R.id.settings_group);
         profile_group.setOnClickListener(this);
         feed_group.setOnClickListener(this);
         style_group.setOnClickListener(this);
+        allCard_group.setOnClickListener(this);
         settings_group.setOnClickListener(this);
 
     }
@@ -337,7 +363,6 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         expandlistView.setAdapter(statusAdapter);
         expandlistView.setGroupIndicator(null); // 去掉默认带的箭头
         expandlistView.setSelection(0);// 设置默认选中项
-
         // 遍历所有group,将所有项设置成默认展开
         int groupCount = expandlistView.getCount();
         for (int i = 0; i < groupCount; i++) {
@@ -352,12 +377,15 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                 // TODO Auto-generated method stub
                 if (guillotineMenu.getVisibility() == View.VISIBLE) {
                     return true;
+                } else if (mTourGuideHandler!=null){
+                    mTourGuideHandler.cleanUp();
                 }
                 String date = statusAdapter.getGroupList().get(groupPosition).getGroupName();
                 Intent intent = new Intent(TimeLineActivity.this, MainActivity.class);
                 intent.putExtra("theme", mSelectedColor);
                 intent.putExtra("style", selectedStyle);
                 intent.putExtra("date", date);
+                intent.putExtra("mSelectedIndex", mSelectedIndex);
                 startActivity(intent);
                 return true;
             }
@@ -389,18 +417,10 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                         group.setChildList(childList);
                         lists.add(0,group);
                         expandlistView.expandGroup(0);
-                        expandlistView.expandGroup(lists.size()-1);
+                        expandlistView.expandGroup(lists.size() - 1);
                     }
                     statusAdapter.notifyDataSetChanged();
 
-                }
-                break;
-            case TO_SWIPE:
-                if (resultCode == RESULT_OK) {
-                    boolean hasChanged=data.getBooleanExtra("hasChanged",false);
-                    if (hasChanged){
-                        statusAdapter.notifyDataSetChanged();
-                    }
                 }
                 break;
         }
@@ -448,11 +468,13 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
 
         List<CardModel> lists = new Select()
                 .from(CardModel.class)
-                .groupBy("date").execute();
+                .groupBy("date").orderBy("Id").execute();
         String[] dates = new String[lists.size()];
         for (int i = 0; i < lists.size(); i++) {
             dates[i] = lists.get(i).date;
+            Log.i("date",dates[i]);
         }
+
         return dates;
     }
 
@@ -501,7 +523,6 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                 startActivityForResult(toSwipeIntent,TO_SWIPE);
                 break;
             case R.id.feed_group:
-
                 final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
                 colorPickerDialog.initialize(R.string.color_picker_default_title, mColor, mSelectedColor, 4, 0);
                 colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
@@ -539,6 +560,17 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                         })
                         .show();
                 break;
+            case R.id.all_group:
+                guillotineAnimation.close();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent toMyGalleryIntent=new Intent(TimeLineActivity.this,MyGalleryActivity.class);
+                        toMyGalleryIntent.putExtra("theme",mSelectedColor);
+                        startActivity(toMyGalleryIntent);
+                    }
+                },1000);
+                break;
             case R.id.settings_group:
                 new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                         .setTitleText("卡片日记~！")
@@ -561,11 +593,6 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                         .show();
 
                 break;
-            case R.id.details_title:
-
-            case R.id.details_text:
-
-                break;
             case R.id.capture_img:
                 if (guillotineMenu.getVisibility() == View.VISIBLE) {
                     return;
@@ -582,6 +609,11 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
                 multipleComponentSimple.delegate = delegate;
                 multipleComponentSimple.showSimple(TimeLineActivity.this);
                 break;
+            default:
+                if (mTourGuideHandler!=null){
+                    mTourGuideHandler.cleanUp();
+                }
+                break;
         }
     }
 
@@ -592,7 +624,7 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
             public void run() {
                 viewHelper.setVisibility(View.GONE);
                 expandlistView.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.Landing).playOn(expandlistView);
+                YoYo.with(Techniques.ZoomInRight).playOn(expandlistView);
             }
         }, 300);
 
@@ -623,8 +655,5 @@ public class TimeLineActivity extends AppCompatActivity implements View.OnClickL
         guillotineMenu.findViewById(R.id.menu_toolbar).setBackgroundColor(color);
         header_helper.setBackgroundColor(color);
     }
-    public void updateView(int groupPosition,int childPosition) {
-        int visiblePosition = expandlistView.getFirstVisiblePosition();
 
-    }
 }

@@ -1,56 +1,86 @@
 package vienan.app.cardgallery.listener;
 
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+
+import vienan.app.cardgallery.utils.Utils;
+
 
 /**
  * Created by vienan on 2015/8/23.
  */
-public abstract class HidingScrollListener implements OnScrollListener {
-    private static final int HIDE_THRESHOLD = 20;
+public abstract class HidingScrollListener extends RecyclerView.OnScrollListener {
 
-    private int mScrolledDistance = 0;
-    private boolean mControlsVisible = true;
-    private int dy;
+        private static final float HIDE_THRESHOLD = 10;
+        private static final float SHOW_THRESHOLD = 70;
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        int lvPosition=0;
-        switch (scrollState){
-            case SCROLL_STATE_TOUCH_SCROLL:
-                lvPosition=view.getLastVisiblePosition();
-                break;
-            case SCROLL_STATE_IDLE:
-                int position=view.getLastVisiblePosition();
-                dy=position-lvPosition;
-                break;
+        private int mToolbarOffset = 0;
+        private boolean mControlsVisible = true;
+        private int mToolbarHeight;
+
+        public HidingScrollListener(Context context) {
+                mToolbarHeight = Utils.getToolbarHeight(context);
         }
-    }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem == 0) {
-            if(!mControlsVisible) {
-                onShow();
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        if (mControlsVisible) {
+                                if (mToolbarOffset > HIDE_THRESHOLD) {
+                                        setInvisible();
+                                } else {
+                                        setVisible();
+                                }
+                        } else {
+                                if ((mToolbarHeight - mToolbarOffset) > SHOW_THRESHOLD) {
+                                        setVisible();
+                                } else {
+                                        setInvisible();
+                                }
+                        }
+                }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                clipToolbarOffset();
+                onMoved(mToolbarOffset);
+
+                if((mToolbarOffset <mToolbarHeight && dy>0) || (mToolbarOffset >0 && dy<0)) {
+                        mToolbarOffset += dy;
+                }
+
+        }
+
+        private void clipToolbarOffset() {
+                if(mToolbarOffset > mToolbarHeight) {
+                        mToolbarOffset = mToolbarHeight;
+                } else if(mToolbarOffset < 0) {
+                        mToolbarOffset = 0;
+                }
+        }
+
+        private void setVisible() {
+                if(mToolbarOffset > 0) {
+                        onShow();
+                        mToolbarOffset = 0;
+                }
                 mControlsVisible = true;
-            }
-        } else {
-            if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {
-                onHide();
+        }
+
+        private void setInvisible() {
+                if(mToolbarOffset < mToolbarHeight) {
+                        onHide();
+                        mToolbarOffset = mToolbarHeight;
+                }
                 mControlsVisible = false;
-                mScrolledDistance = 0;
-            } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {
-                onShow();
-                mControlsVisible = true;
-                mScrolledDistance = 0;
-            }
-        }
-        if((mControlsVisible && dy>0) || (!mControlsVisible && dy<0)) {
-            mScrolledDistance += dy;
         }
 
-    }
-
-    public abstract void onHide();
-    public abstract void onShow();
+        public abstract void onMoved(int distance);
+        public abstract void onShow();
+        public abstract void onHide();
 }

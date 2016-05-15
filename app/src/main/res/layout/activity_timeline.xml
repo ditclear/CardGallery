@@ -48,10 +48,13 @@
             android:layout_height="?android:actionBarSize"
             android:layout_gravity="right"
             rv_centered="true">
-        <ImageView
-            android:id="@+id/add_note"
-            style="@style/ImageView.Hamburger"
-            android:src="@mipmap/ic_mode_edit_white_24dp" />
+
+            <ImageView
+                android:id="@+id/add_note"
+                style="@style/ImageView.Hamburger"
+
+                android:background="@drawable/color_picker_swatch"
+                android:src="@mipmap/ic_mode_edit_white_24dp" />
         </com.andexert.library.RippleView>
     </android.support.v7.widget.Toolbar>
     <RelativeLayout
@@ -119,6 +122,8 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="@dimen/expandable_selector_margin"
                 android:src="@mipmap/ic_photo_library_white_36dp" />
+
+
         </android.support.v7.widget.Toolbar>
 
     </io.codetail.widget.RevealFrameLayout>

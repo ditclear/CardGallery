@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,16 +32,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.greenrobot.event.EventBus;
 import vienan.app.cardgallery.R;
 import vienan.app.cardgallery.adapter.SwipeCardAdapter;
 import vienan.app.cardgallery.model.CardModel;
+import vienan.app.cardgallery.model.MessageEvent;
 import vienan.app.cardgallery.view.CanaroTextView;
 
 /**
  * Created by vienan on 2015/8/26.
  */
 public class SwipeAbleCardsActivity extends Activity implements
-        com.andtinder.model.CardModel.OnCardDimissedListener, com.andtinder.model.CardModel.OnClickListener {
+        com.andtinder.model.CardModel.OnCardDimissedListener {
 
     @Bind(R.id.layout_view)
     CardContainer mCardContainer;
@@ -55,10 +58,22 @@ public class SwipeAbleCardsActivity extends Activity implements
     @Bind(R.id.toolbar_title)
     CanaroTextView toolbarTitle;
     String fromWhere;
+    @Bind(R.id.ib_refresh_swipe)
+    ImageButton ibRefresh;
 
     @OnClick(R.id.back_to_main)
     public void backToMain() {
         super.onBackPressed();
+    }
+
+    @OnClick(R.id.ib_refresh_swipe)
+    public void reload(){
+        SwipeAbleCardsActivity.this.recreate();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -66,9 +81,7 @@ public class SwipeAbleCardsActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.swipe_cards);
         Intent intent = getIntent();
-        //lists = (List<CardModel>) intent.getSerializableExtra("lists");
         fromWhere = intent.getStringExtra("fromWhere");
-
         theme = intent.getIntExtra("theme", R.color.pink);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
@@ -83,6 +96,21 @@ public class SwipeAbleCardsActivity extends Activity implements
             lists = getAllStar();
         } else {
             lists = getAllNote(intent.getStringExtra("date"));
+        }
+        if (lists.isEmpty()) {
+            SnackbarManager.show(
+                    Snackbar.with(getApplicationContext()).text(R.string.no_more_cards)
+                            .textColor(Color.WHITE)
+                            .color(theme)
+                            .actionLabel("知道了")
+                            .actionListener(new ActionClickListener() {
+                                @Override
+                                public void onActionClicked(Snackbar snackbar) {
+                                    onBackPressed();
+                                }
+                            })
+                            .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                    , this);
         }
         initView(theme);
     }
@@ -103,7 +131,6 @@ public class SwipeAbleCardsActivity extends Activity implements
                 toolbar.setBackgroundColor(theme);
             }
         }
-        //SimpleCardStackAdapter adapter = new SimpleCardStackAdapter(this);
         adapter = new SwipeCardAdapter(this, lists);
         for (int i = lists.size() - 1; i >= 0; i--) {
             CardModel cardModel = lists.get(i);
@@ -111,7 +138,6 @@ public class SwipeAbleCardsActivity extends Activity implements
             com.andtinder.model.CardModel model = new com.andtinder.model.CardModel(
                     cardModel.title, cardModel.description, cardImageDrawable
             );
-            model.setOnClickListener(this);
             model.setOnCardDimissedListener(this);
             adapter.add(model);
         }
@@ -127,7 +153,7 @@ public class SwipeAbleCardsActivity extends Activity implements
                     .beginConfig()
                     .withBorder(4) /* thickness in px */
                     .endConfig()
-                    .buildRoundRect("NOTE",theme, 20);
+                    .buildRoundRect(" ", theme, 2);
         }
     }
 
@@ -143,8 +169,10 @@ public class SwipeAbleCardsActivity extends Activity implements
         }
         win.setAttributes(winParams);
     }
+
     private Handler mHandler = new Handler();
-    private boolean hasChanged=false;
+    private boolean hasChanged = false;
+
     /**
      * 浏览完毕返回
      */
@@ -176,11 +204,14 @@ public class SwipeAbleCardsActivity extends Activity implements
         dialog.setConfirmText("确定").setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                CardModel model=lists.get(index-1);
-                model.star = 0;
-                Log.d("model",""+index+ model.toString()+ model.getId());
-                new Update(CardModel.class).set("star=?", model.star).where("Id=?", model.getId()).execute();
-                hasChanged=true;
+                CardModel model = lists.get(index - 1);
+                if (model != null) {
+                    model.star = 0;
+                    Log.d("model", "" + index + model.toString() + model.getId());
+                    new Update(CardModel.class).set("star=?", model.star).where("Id=?", model.getId()).execute();
+                    hasChanged = true;
+                    EventBus.getDefault().post(new MessageEvent(hasChanged));
+                }
                 sweetAlertDialog.cancel();
             }
         }).show();
@@ -189,14 +220,11 @@ public class SwipeAbleCardsActivity extends Activity implements
     @Override
     public void onDislike() {
         back();
-        adapter.getLists().set(index - 1, null);
-
     }
 
     private void back() {
         index++;
-        if (index== adapter.getCount()) {
-            adapter.getLists().set( adapter.getCount()-1,null);
+        if (index == adapter.getCount()) {
             SnackbarManager.show(
                     Snackbar.with(getApplicationContext()).text(R.string.no_more_cards)
                             .textColor(Color.WHITE)
@@ -205,20 +233,15 @@ public class SwipeAbleCardsActivity extends Activity implements
                             .actionListener(new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
-                                    Intent back_to_timeLine=new Intent();
-                                    back_to_timeLine.putExtra("hasChanged",hasChanged);
-                                    setResult(RESULT_OK,back_to_timeLine);
                                     onBackPressed();
                                 }
                             })
+                            .allowMultipleActionClicks(true)
                             .duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+                            .animation(true)
                     , this);
         }
 
-    }
-
-    @Override
-    public void OnClickListener() {
     }
 
     private void toast(String msg) {

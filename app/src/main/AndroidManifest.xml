@@ -35,7 +35,8 @@
         <meta-data
             android:name="AA_MODELS"
             android:value="vienan.app.cardgallery.CardModel" />
-        <activity android:name=".activity.WelcomeActivity">
+        <activity
+            android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -46,6 +47,8 @@
             android:label="@string/app_name">
 
         </activity>
+        <activity android:name=".activity.BlurZoomGalleryActivity"/>
+        <activity android:name=".activity.MyGalleryActivity"/>
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.EditCardActivity" />
         <activity android:name=".activity.SwipeAbleCardsActivity" />

@@ -27,7 +27,12 @@
                 android:text="@string/scan_card"
                 android:textColor="@color/lsq_color_white"
                 android:textSize="@dimen/guillotine_item_text_size" />
-
+            <ImageButton
+                android:id="@+id/ib_refresh_swipe"
+                style="@style/ImageView.Hamburger"
+                android:layout_gravity="right"
+                android:background="@drawable/color_picker_swatch"
+                android:src="@mipmap/ic_refresh_white_24dp"/>
         </android.support.v7.widget.Toolbar>
 
         <com.andtinder.view.CardContainer

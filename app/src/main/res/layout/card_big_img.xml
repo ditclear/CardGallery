@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cardView"
     card_view:cardCornerRadius="@dimen/card_corner_radius"
-    style="@style/MainCardView">
+    style="@style/MainCardView"
+    android:padding="2dp">
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -24,8 +25,11 @@
                     style="@style/CardTitle"
                     android:layout_alignBottom="@+id/imageView"
                     android:id="@id/titleTextView"
-                    android:maxLines="2"
-                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusableInTouchMode="true"
                     tools:text="Title"/>
 
                 <include layout="@layout/text_detail"/>

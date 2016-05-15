@@ -14,13 +14,15 @@
     <string name="favorites">FAVORITES</string>
     <string name="theme">THEME</string>
     <string name="activity">STYLES</string>
+    <string name="allCard">ALL CARD</string>
     <string name="about">ABOUT</string>
     <string name="scan_card">NoteGallery</string>
     <string name="color_picker_default_title">THEME</string>
     <string name="color_swatch_description">Color %1$d</string>
     <string name="color_swatch_description_selected">Color %1$d selected</string>
     <string name="editCard_tip">标题或内容未填写</string>
-    <string name="no_more_cards">没有更多图片</string>
-    <string name="welcome_title">CardGallery~!</string>
-    <string name="no_more_cards_main">还没有图片，快去添加</string>
+    <string name="no_more_cards">并没有更多Note</string>
+    <string name="welcome_title">CardNote~!</string>
+    <string name="no_more_cards_main">并没有更多Card,快去添加</string>
+    <string name="action_exit">退出</string>
 </resources>
